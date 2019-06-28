@@ -52,7 +52,7 @@ export default class Controller {
 	 */
 	render(context) {
 		this.renderHypercube(context);
-		context.translate(-200, 200);
+		context.translate(-200, 230);
 		this.renderAxis(context);
 	}
 
