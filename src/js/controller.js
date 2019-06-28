@@ -70,6 +70,8 @@ export default class Controller {
 
 			const p2d = get2dProjectedPoint(p, this.dimensionProjections);
 
+			const startAlpha = context.globalAlpha;
+			context.globalAlpha = 0.5;
 			context.beginPath();
 			context.strokeStyle = 'black';
 			context.lineWidth = 1;
@@ -93,6 +95,8 @@ export default class Controller {
 				1.1 * scale * p2d.x,
 				1.1 * scale * p2d.y
 			);
+
+			context.globalAlpha = startAlpha;
 		}
 	}
 
