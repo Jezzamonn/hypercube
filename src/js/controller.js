@@ -40,7 +40,16 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		const rotMatrix = rotationMatrix(this.dimensions, 0, 1, 2 * Math.PI * this.animAmt);
+		let rotMatrix = identity(this.dimensions);
+		for (let i = 0; i < this.dimensions - 1; i++) {
+			const subRotation = rotationMatrix(
+				this.dimensions,
+				i,
+				i + 1,
+				2 * Math.PI * this.animAmt
+			);
+			rotMatrix = matrixMul(subRotation, rotMatrix);
+		}
 
 		for (const p1 of this.hyperPoints) {
 			for (const p2 of this.hyperPoints) {
