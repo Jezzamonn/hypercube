@@ -60,6 +60,7 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	renderAxis(context) {
+		const scale = 60;
 		for (let i = 0; i < this.dimensions; i++) {
 			const p = [];
 			for (let j = 0; j < this.dimensions; j++) {
@@ -72,7 +73,18 @@ export default class Controller {
 			context.beginPath();
 			context.strokeStyle = 'black';
 			context.moveTo(0, 0);
-			context.lineTo(100 * p2d.x, 100 * p2d.y);
+			context.lineTo(scale * p2d.x, scale * p2d.y);
+
+			// the arrow head
+			context.moveTo(
+				0.9 * scale * p2d.x - 0.05 * scale * p2d.y,
+				0.9 * scale * p2d.y + 0.05 * scale * p2d.x
+			);
+			context.lineTo(scale * p2d.x, scale * p2d.y);
+			context.lineTo(
+				0.9 * scale * p2d.x + 0.05 * scale * p2d.y,
+				0.9 * scale * p2d.y - 0.05 * scale * p2d.x
+			);
 			context.stroke();
 		}
 	}
