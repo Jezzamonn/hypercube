@@ -4,7 +4,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 6;
 
-		this.dimensions = 9;
+		this.dimensions = 3;
 
 		this.hyperPoints = [[]];
 
@@ -51,6 +51,35 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		this.renderHypercube(context);
+		this.renderAxis(context);
+	}
+
+	/**
+	 * @param {!CanvasRenderingContext2D} context
+	 */
+	renderAxis(context) {
+		for (let i = 0; i < this.dimensions; i++) {
+			const p = [];
+			for (let j = 0; j < this.dimensions; j++) {
+				p.push(0);
+			}
+			p[i] = 1;
+
+			const p2d = get2dProjectedPoint(p, this.dimensionProjections);
+
+			context.beginPath();
+			context.strokeStyle = 'black';
+			context.moveTo(0, 0);
+			context.lineTo(100 * p2d.x, 100 * p2d.y);
+			context.stroke();
+		}
+	}
+
+	/**
+	 * @param {!CanvasRenderingContext2D} context
+	 */
+	renderHypercube(context) {
 		let rotMatrix = this.baseRotation;
 		for (let i = 0; i < this.dimensions - 1; i++) {
 			const subRotation = rotationMatrix(
@@ -81,6 +110,7 @@ export default class Controller {
 
 				const size = 30;
 
+				const startAlpha = context.globalAlpha;
 				context.globalAlpha = 0.5;
 				context.beginPath();
 				context.strokeStyle = 'black';
@@ -88,7 +118,7 @@ export default class Controller {
 				context.moveTo(size * point2d1.x, size * point2d1.y);
 				context.lineTo(size * point2d2.x, size * point2d2.y);
 				context.stroke();
-				context.globalAlpha = 0.1;
+				context.globalAlpha = startAlpha;
 			}
 		}
 
@@ -157,6 +187,10 @@ function identity(dim) {
 	return matrix;
 }
 
+/**
+ * @param {number} dim1 x-axis. i.e. columns. Maybe backwards from what you'd think
+ * @param {number} dim2 y-axis, i.e. Rows.
+ */
 function zeros(dim1, dim2) {
 	const matrix = [];
 	for (let y = 0; y < dim2; y++) {
