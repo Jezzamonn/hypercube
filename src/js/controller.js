@@ -2,9 +2,9 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 3;
+		this.period = 6;
 
-		this.dimensions = 4;
+		this.dimensions = 5;
 
 		this.hyperPoints = [[]];
 
