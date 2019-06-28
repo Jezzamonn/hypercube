@@ -71,7 +71,7 @@ export default class Controller {
 			const p2d = get2dProjectedPoint(p, this.dimensionProjections);
 
 			const startAlpha = context.globalAlpha;
-			context.globalAlpha = 0.5;
+			context.globalAlpha = 1;
 			context.beginPath();
 			context.strokeStyle = getColor(i);
 			context.lineWidth = 1;
@@ -286,7 +286,7 @@ function getDimensionLabel(dim) {
 }
 
 function getColor(dim) {
-	const labels = ['red', 'blue', 'green', 'yellow', 'cyan', 'magenta'];
+	const labels = ['red', 'blue', 'green', 'gold', 'cyan', 'magenta'];
 	if (dim < labels.length) {
 		return labels[dim];
 	}
