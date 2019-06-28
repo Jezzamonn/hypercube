@@ -40,7 +40,7 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		const rotMatrix = identity(this.dimensions);
+		const rotMatrix = rotationMatrix(this.dimensions, 0, 1, 2 * Math.PI * this.animAmt);
 
 		for (const p1 of this.hyperPoints) {
 			for (const p2 of this.hyperPoints) {
@@ -149,10 +149,10 @@ function zeros(dim1, dim2) {
 function rotationMatrix(dimensions, dim1, dim2, angle) {
 	const matrix = identity(dimensions);
 	// // have no idea which way the signs and such go on these
-	// matrix[dim1][dim1] = Math.cos(angle);
-	// matrix[dim1][dim2] = Math.sin(angle);
-	// matrix[dim2][dim1] = -Math.sin(angle);
-	// matrix[dim2][dim2] = Math.cos(angle);
+	matrix[dim1][dim1] = Math.cos(angle);
+	matrix[dim1][dim2] = Math.sin(angle);
+	matrix[dim2][dim1] = -Math.sin(angle);
+	matrix[dim2][dim2] = Math.cos(angle);
 	return matrix;
 }
 
