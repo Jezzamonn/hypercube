@@ -72,6 +72,7 @@ export default class Controller {
 
 			context.beginPath();
 			context.strokeStyle = 'black';
+			context.lineWidth = 1;
 			context.moveTo(0, 0);
 			context.lineTo(scale * p2d.x, scale * p2d.y);
 
@@ -86,6 +87,12 @@ export default class Controller {
 				0.9 * scale * p2d.y - 0.05 * scale * p2d.x
 			);
 			context.stroke();
+
+			context.fillText(
+				getDimensionLabel(i),
+				1.1 * scale * p2d.x,
+				1.1 * scale * p2d.y
+			);
 		}
 	}
 
@@ -263,4 +270,12 @@ function matrix2Vec(matrix) {
 		result.push(row[0]);
 	}
 	return result;
+}
+
+function getDimensionLabel(dim) {
+	const labels = ['x', 'y', 'z', 'u', 'v', 'w'];
+	if (dim < labels.length) {
+		return labels[dim];
+	}
+	return '?';
 }
