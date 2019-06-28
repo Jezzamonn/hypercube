@@ -73,7 +73,7 @@ export default class Controller {
 			const startAlpha = context.globalAlpha;
 			context.globalAlpha = 0.5;
 			context.beginPath();
-			context.strokeStyle = 'black';
+			context.strokeStyle = getColor(i);
 			context.lineWidth = 1;
 			context.moveTo(0, 0);
 			context.lineTo(scale * p2d.x, scale * p2d.y);
@@ -90,6 +90,7 @@ export default class Controller {
 			);
 			context.stroke();
 
+			context.fillStyle = getColor(i);
 			context.fillText(
 				getDimensionLabel(i),
 				1.1 * scale * p2d.x,
@@ -282,4 +283,12 @@ function getDimensionLabel(dim) {
 		return labels[dim];
 	}
 	return '?';
+}
+
+function getColor(dim) {
+	const labels = ['red', 'blue', 'green', 'yellow', 'cyan', 'majenta'];
+	if (dim < labels.length) {
+		return labels[dim];
+	}
+	return 'black';
 }
