@@ -22,6 +22,17 @@ export default class Controller {
 			}
 			this.dimensionProjections.push(projection);
 		}
+
+		this.baseRotation = identity(this.dimensions);
+		for (let i = 0; i < this.dimensions - 1; i++) {
+			const subRotation = rotationMatrix(
+				this.dimensions,
+				i,
+				i + 1,
+				2 * Math.PI * Math.random(),
+			);
+			this.baseRotation = matrixMul(subRotation, this.baseRotation);
+		}
 	}
 
 	/**
@@ -40,7 +51,7 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
-		let rotMatrix = identity(this.dimensions);
+		let rotMatrix = this.baseRotation;
 		for (let i = 0; i < this.dimensions - 1; i++) {
 			const subRotation = rotationMatrix(
 				this.dimensions,
