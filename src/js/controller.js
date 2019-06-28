@@ -18,7 +18,7 @@ export default class Controller {
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
-				y: Math.sin(angle),
+				y: -Math.sin(angle),
 			}
 			this.dimensionProjections.push(projection);
 		}
@@ -52,6 +52,7 @@ export default class Controller {
 	 */
 	render(context) {
 		this.renderHypercube(context);
+		context.translate(-200, 200);
 		this.renderAxis(context);
 	}
 
