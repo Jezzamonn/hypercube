@@ -4,7 +4,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 6;
 
-		this.dimensions = 4;
+		this.dimensions = 6;
 
 		this.hyperPoints = [[]];
 
@@ -286,7 +286,7 @@ function getDimensionLabel(dim) {
 }
 
 function getColor(dim) {
-	const labels = ['red', 'blue', 'green', 'yellow', 'cyan', 'majenta'];
+	const labels = ['red', 'blue', 'green', 'yellow', 'cyan', 'magenta'];
 	if (dim < labels.length) {
 		return labels[dim];
 	}
