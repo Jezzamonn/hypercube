@@ -4,7 +4,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 3;
 
-		this.dimensions = 8;
+		this.dimensions = 2;
 
 		this.hyperPoints = [[]];
 
@@ -40,6 +40,8 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	render(context) {
+		const rotMatrix = identity(this.dimensions);
+
 		for (const p1 of this.hyperPoints) {
 			for (const p2 of this.hyperPoints) {
 				if (p1 === p2) {
@@ -51,8 +53,11 @@ export default class Controller {
 					continue;
 				}
 
-				const point2d1 = get2dProjectedPoint(p1, this.dimensionProjections);
-				const point2d2 = get2dProjectedPoint(p2, this.dimensionProjections);
+				const rotatedP1 = matrix2Vec(matrixMul(rotMatrix, vec2Matrix(p1)));
+				const rotatedP2 = matrix2Vec(matrixMul(rotMatrix, vec2Matrix(p2)));
+
+				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
+				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
 
 				const size = 30;
 
@@ -114,4 +119,78 @@ function get2dProjectedPoint(p, projections) {
 		point2d.y += projections[i].y * p[i];
 	}
 	return point2d;
+}
+
+function identity(dim) {
+	const matrix = [];
+	// generate the identity matrix
+	for (let i = 0; i < dim; i++) {
+		const row = [];
+		for (let j = 0; j < dim; j++) {
+			row.push(i === j ? 1 : 0);
+		}
+		matrix.push(row);
+	}
+	return matrix;
+}
+
+function zeros(dim1, dim2) {
+	const matrix = [];
+	for (let y = 0; y < dim2; y++) {
+		const row = [];
+		for (let x = 0; x < dim1; x++) {
+			row.push(0);
+		}
+		matrix.push(row);
+	}
+	return matrix;
+}
+
+function rotationMatrix(dimensions, dim1, dim2, angle) {
+	const matrix = identity(dimensions);
+	// // have no idea which way the signs and such go on these
+	// matrix[dim1][dim1] = Math.cos(angle);
+	// matrix[dim1][dim2] = Math.sin(angle);
+	// matrix[dim2][dim1] = -Math.sin(angle);
+	// matrix[dim2][dim2] = Math.cos(angle);
+	return matrix;
+}
+
+/**
+ * I kinda forgot how matrix multiplication works but I think this is it.
+ *
+ * @param {Array<Array<number>>} mat1
+ * @param {Array<Array<number>>} mat2
+ */
+function matrixMul(mat1, mat2) {
+	// the order of these is weird because I'm sticking to the x / y thing
+	// instead of rows / cols
+	const result = zeros(mat2[0].length, mat1.length);
+	// each row in the first matrix
+	for (let i = 0; i < mat1.length; i++) {
+		// each column in the first matrix / each row in the second matrix
+		for (let j = 0; j < mat1[0].length; j++) {
+			// each column in the second matrix
+			for (let k = 0; k < mat2[0].length; k++) {
+				result[i][k] += mat1[i][j] * mat2[j][k]
+			}
+		}
+	}
+	return result;
+}
+
+function vec2Matrix(vec) {
+	const result = [];
+	for (const el of vec) {
+		result.push([el]);
+	}
+	return result;
+}
+
+function matrix2Vec(matrix) {
+	const result = [];
+	for (const row of matrix) {
+		result.push(row[0]);
+	}
+	return result;
 }
