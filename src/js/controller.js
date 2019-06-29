@@ -6,7 +6,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.period = 6;
 
-		this.dimensions = 6;
+		this.dimensions = 4;
 
 		this.hyperPoints = [[]];
 
