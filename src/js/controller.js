@@ -1,3 +1,5 @@
+const PHI = (1 + Math.sqrt(5)) / 2;
+
 export default class Controller {
 
 	constructor() {
@@ -286,9 +288,7 @@ function getDimensionLabel(dim) {
 }
 
 function getColor(dim) {
-	const labels = ['red', 'blue', 'green', 'gold', 'cyan', 'magenta'];
-	if (dim < labels.length) {
-		return labels[dim];
-	}
-	return 'black';
+	const hueAmt = (PHI * dim) % 1;
+	const hue = 360 * hueAmt;
+	return `hsl(${hue}, 90%, 40%)`;
 }
