@@ -2,9 +2,9 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 5;
+		this.period = 7;
 
-		this.dimensions = 3;
+		this.dimensions = 7;
 
 		this.hyperPoints = [[]];
 
@@ -68,13 +68,15 @@ export default class Controller {
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
 
-				const size = 50;
+				const size = 30;
 
+				context.globalAlpha = 0.3;
 				context.beginPath();
 				context.strokeStyle = 'black';
 				context.moveTo(size * point2d1.x, size * point2d1.y);
 				context.lineTo(size * point2d2.x, size * point2d2.y);
 				context.stroke();
+				context.globalAlpha = 1;
 			}
 		}
 
