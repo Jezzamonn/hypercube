@@ -2,7 +2,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 3;
+		this.period = 5;
 
 		this.dimensions = 4;
 
@@ -68,7 +68,7 @@ export default class Controller {
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
 
-				const size = 30;
+				const size = 50;
 
 				context.beginPath();
 				context.strokeStyle = 'black';
