@@ -68,7 +68,7 @@ export default class Controller {
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
 
-				const size = 30;
+				const size = 40;
 
 				context.globalAlpha = 0.3;
 				context.beginPath();
