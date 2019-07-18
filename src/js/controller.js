@@ -287,7 +287,6 @@ function getDimensionLabel(dim) {
 }
 
 function getColor(dim) {
-	const hueAmt = (PHI * dim) % 1;
-	const hue = 360 * hueAmt;
-	return `hsl(${hue}, 90%, 40%)`;
+	// Bye bye color
+	return 'black';
 }
