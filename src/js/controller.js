@@ -118,11 +118,10 @@ export default class Controller {
 			rotMatrix = matrixMul(subRotation, rotMatrix);
 		}
 
-		for (const p1 of this.hyperPoints) {
-			for (const p2 of this.hyperPoints) {
-				if (p1 === p2) {
-					continue;
-				}
+		for (let i = 0; i < this.hyperPoints.length; i++) {
+			const p1 = this.hyperPoints[i];
+			for (let j = i + 1; j < this.hyperPoints.length; j++) {
+				const p2 = this.hyperPoints[j];
 
 				if (l1dist(p1, p2) !== 2) {
 					// just drawing these lines
