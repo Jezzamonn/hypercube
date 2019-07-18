@@ -1,4 +1,4 @@
-import { easeInOut } from './util';
+import { easeInOut, loop } from './util';
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 
@@ -6,25 +6,33 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.shapeTime = 2;
-		this.dimensions = [1, 2, 3, 4];
-		this.period = this.dimensions.length * this.shapeTime;
+		this.shapeTime = 4;
+		this.minDimension = 1;
+		this.maxDimension = 4;
+		this.totalDimensions = this.maxDimension - this.minDimension + 1;
+		this.period = this.totalDimensions * this.shapeTime;
 
-		this.setNumberOfDimensions(4);
+		// This is a float actually!
+		this.currentDimension = 1;
+
+		this.lastCalculatedDimension = 0;
+		this.generateDimensionData();
 	}
 
-	setNumberOfDimensions(dim) {
-		this.currentDimension = dim;
+	get currentIntDimension() {
+		return Math.floor(this.currentDimension);
+	}
 
+	generateDimensionData() {
 		this.hyperPoints = [[]];
 
-		for (let i = 0; i < this.currentDimension; i++) {
+		for (let i = 0; i < this.currentIntDimension; i++) {
 			this.hyperPoints = appendPermutations([-1, 1], this.hyperPoints);
 		}
 
 		this.dimensionProjections = [];
-		for (let i = 0; i < this.currentDimension; i++) {
-			const amt = i / this.dimensions.length;
+		for (let i = 0; i < this.currentIntDimension; i++) {
+			const amt = i / this.totalDimensions;
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
@@ -33,7 +41,7 @@ export default class Controller {
 			this.dimensionProjections.push(projection);
 		}
 
-		this.baseRotation = identity(this.currentDimension);
+		this.baseRotation = identity(this.currentIntDimension);
 		// for (let i = 0; i < this.dimensions - 1; i++) {
 		// 	const subRotation = rotationMatrix(
 		// 		this.dimensions,
@@ -43,6 +51,13 @@ export default class Controller {
 		// 	);
 		// 	this.baseRotation = matrixMul(subRotation, this.baseRotation);
 		// }
+		this.lastCalculatedDimension = this.currentIntDimension;
+	}
+
+	updateDimensionData() {
+		if (this.lastCalculatedDimension != this.currentIntDimension) {
+			this.generateDimensionData();
+		}
 	}
 
 	/**
@@ -54,11 +69,8 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		const dimensionIndex = Math.floor(this.dimensions.length * this.animAmt);
-		const desiredDimension = this.dimensions[dimensionIndex];
-		if (desiredDimension != this.currentDimension) {
-			this.setNumberOfDimensions(desiredDimension);
-		}
+		this.currentDimension = this.minDimension + this.totalDimensions * loop(this.animAmt);
+		this.updateDimensionData();
 	}
 
 	/**
@@ -77,9 +89,9 @@ export default class Controller {
 	 */
 	renderAxis(context) {
 		const scale = 60;
-		for (let i = 0; i < this.currentDimension; i++) {
+		for (let i = 0; i < this.currentIntDimension; i++) {
 			const p = [];
-			for (let j = 0; j < this.currentDimension; j++) {
+			for (let j = 0; j < this.currentIntDimension; j++) {
 				p.push(0);
 			}
 			p[i] = 1;
@@ -121,11 +133,11 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	renderHypercube(context) {
-		const localAnimAmt = (this.dimensions.length * this.animAmt) % 1;
+		const localAnimAmt = this.currentDimension % 1;
 		let rotMatrix = this.baseRotation;
-		for (let i = 0; i < this.currentDimension - 1; i++) {
+		for (let i = 0; i < this.currentIntDimension - 1; i++) {
 			const subRotation = rotationMatrix(
-				this.currentDimension,
+				this.currentIntDimension,
 				i,
 				i + 1,
 				2 * Math.PI * localAnimAmt
@@ -133,8 +145,8 @@ export default class Controller {
 			rotMatrix = matrixMul(subRotation, rotMatrix);
 		}
 		// Also scale the last dimension
-		const scaleMatrix = identity(this.currentDimension);
-		scaleMatrix[this.currentDimension-1][this.currentDimension-1] = easeInOut(localAnimAmt, 2);
+		const scaleMatrix = identity(this.currentIntDimension);
+		scaleMatrix[this.currentIntDimension-1][this.currentIntDimension-1] = easeInOut(localAnimAmt, 2);
 
 		for (let i = 0; i < this.hyperPoints.length; i++) {
 			const p1 = this.hyperPoints[i];
