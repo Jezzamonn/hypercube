@@ -8,7 +8,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.shapeTime = 4;
 		this.minDimension = 1;
-		this.maxDimension = 6;
+		this.maxDimension = 9;
 		this.totalDimensions = this.maxDimension - this.minDimension + 1;
 		this.period = this.totalDimensions * this.shapeTime;
 
