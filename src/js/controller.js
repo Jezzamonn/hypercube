@@ -37,7 +37,7 @@ export default class Controller {
 				this.currentIntDimension,
 				i,
 				i + 1,
-				2 * Math.PI * Math.random(),
+				2 * Math.PI * (PHI * (i+1)),
 			);
 			this.baseRotation = matrixMul(subRotation, this.baseRotation);
 		}
@@ -140,15 +140,15 @@ export default class Controller {
 	renderHypercube(context) {
 		const localAnimAmt = this.currentDimension % 1;
 		let rotMatrix = this.baseRotation;
-		for (let i = 0; i < this.currentIntDimension - 1; i++) {
-			const subRotation = rotationMatrix(
-				this.currentIntDimension,
-				i,
-				i + 1,
-				2 * Math.PI * localAnimAmt
-			);
-			rotMatrix = matrixMul(subRotation, rotMatrix);
-		}
+		// for (let i = 0; i < this.currentIntDimension - 1; i++) {
+		// 	const subRotation = rotationMatrix(
+		// 		this.currentIntDimension,
+		// 		i,
+		// 		i + 1,
+		// 		2 * Math.PI * localAnimAmt
+		// 	);
+		// 	rotMatrix = matrixMul(subRotation, rotMatrix);
+		// }
 		// Also scale the last dimension
 		const scaleMatrix = identity(this.currentIntDimension);
 		scaleMatrix[this.currentIntDimension-1][this.currentIntDimension-1] = easeInOut(localAnimAmt, 2);
