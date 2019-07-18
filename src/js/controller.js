@@ -31,15 +31,16 @@ export default class Controller {
 			this.hyperPoints = appendPermutations([-1, 1], this.hyperPoints);
 		}
 
-		// for (let i = 0; i < this.dimensions - 1; i++) {
-		// 	const subRotation = rotationMatrix(
-		// 		this.dimensions,
-		// 		i,
-		// 		i + 1,
-		// 		2 * Math.PI * Math.random(),
-		// 	);
-		// 	this.baseRotation = matrixMul(subRotation, this.baseRotation);
-		// }
+		this.baseRotation = identity(this.currentIntDimension);
+		for (let i = 0; i < this.currentIntDimension - 1; i++) {
+			const subRotation = rotationMatrix(
+				this.currentIntDimension,
+				i,
+				i + 1,
+				2 * Math.PI * Math.random(),
+			);
+			this.baseRotation = matrixMul(subRotation, this.baseRotation);
+		}
 		this.lastCalculatedDimension = this.currentIntDimension;
 	}
 
@@ -54,8 +55,6 @@ export default class Controller {
 			}
 			this.dimensionProjections.push(projection);
 		}
-
-		this.baseRotation = identity(this.currentIntDimension);
 	}
 
 	updateDimensionData() {
@@ -164,8 +163,8 @@ export default class Controller {
 					continue;
 				}
 
-				const rotatedP1 = matrix2Vec(matrixMul(scaleMatrix, vec2Matrix(p1)));
-				const rotatedP2 = matrix2Vec(matrixMul(scaleMatrix, vec2Matrix(p2)));
+				const rotatedP1 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p1))));
+				const rotatedP2 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p2))));
 
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
