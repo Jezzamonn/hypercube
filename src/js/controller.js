@@ -130,6 +130,9 @@ export default class Controller {
 			);
 			rotMatrix = matrixMul(subRotation, rotMatrix);
 		}
+		// Also scale the last dimension
+		const scaleMatrix = identity(this.currentDimension);
+		scaleMatrix[this.currentDimension-1][this.currentDimension-1] = this.animAmt;
 
 		for (let i = 0; i < this.hyperPoints.length; i++) {
 			const p1 = this.hyperPoints[i];
@@ -141,8 +144,8 @@ export default class Controller {
 					continue;
 				}
 
-				const rotatedP1 = matrix2Vec(matrixMul(rotMatrix, vec2Matrix(p1)));
-				const rotatedP2 = matrix2Vec(matrixMul(rotMatrix, vec2Matrix(p2)));
+				const rotatedP1 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p1))));
+				const rotatedP2 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p2))));
 
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
