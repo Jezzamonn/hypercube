@@ -1,4 +1,4 @@
-import { easeInOut, loop, clamp } from './util';
+import { easeInOut, loop, clamp, slurp } from './util';
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 
@@ -36,14 +36,18 @@ export default class Controller {
 
 	updateProjections() {
 		this.dimensionProjections = [];
+		const leftoverAmt = this.currentDimension % 1;
 		for (let i = 0; i < this.currentIntDimension; i++) {
-			let amt = i / (i + 1); 
-			// if (i == this.currentIntDimension - 1) {
-			// 	amt = i / this.currentIntDimension;
-			// }
-			// else {
-			// 	amt = i / (this.currentDimension - 1);
-			// }
+			let amt = 0
+			if (i == this.currentIntDimension - 1) {
+				amt = i / this.currentIntDimension;
+			}
+			else if (i > 0) {
+				amt = slurp(
+					i / (this.currentDimension - 1),
+					i / this.currentIntDimension,
+					leftoverAmt);
+			}
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
