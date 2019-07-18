@@ -137,10 +137,10 @@ export default class Controller {
 				const size = 30;
 
 				const startAlpha = context.globalAlpha;
-				context.globalAlpha = 0.5;
+				context.globalAlpha = 0.75;
 				context.beginPath();
 				context.strokeStyle = 'black';
-				context.lineWidth = 0.2;
+				context.lineWidth = 1;
 				context.moveTo(size * point2d1.x, size * point2d1.y);
 				context.lineTo(size * point2d2.x, size * point2d2.y);
 				context.stroke();
