@@ -31,16 +31,6 @@ export default class Controller {
 			this.hyperPoints = appendPermutations([-1, 1], this.hyperPoints);
 		}
 
-		this.baseRotation = identity(this.currentIntDimension);
-		for (let i = 0; i < this.currentIntDimension - 1; i++) {
-			const subRotation = rotationMatrix(
-				this.currentIntDimension,
-				i,
-				i + 1,
-				2 * Math.PI * (PHI * (i+1)),
-			);
-			this.baseRotation = matrixMul(subRotation, this.baseRotation);
-		}
 		this.lastCalculatedDimension = this.currentIntDimension;
 	}
 
@@ -139,17 +129,6 @@ export default class Controller {
 	 */
 	renderHypercube(context) {
 		const localAnimAmt = this.currentDimension % 1;
-		let rotMatrix = this.baseRotation;
-		// for (let i = 0; i < this.currentIntDimension - 1; i++) {
-		// 	const subRotation = rotationMatrix(
-		// 		this.currentIntDimension,
-		// 		i,
-		// 		i + 1,
-		// 		2 * Math.PI * localAnimAmt
-		// 	);
-		// 	rotMatrix = matrixMul(subRotation, rotMatrix);
-		// }
-		// Also scale the last dimension
 		const scaleMatrix = identity(this.currentIntDimension);
 		scaleMatrix[this.currentIntDimension-1][this.currentIntDimension-1] = easeInOut(localAnimAmt, 2);
 
@@ -163,8 +142,8 @@ export default class Controller {
 					continue;
 				}
 
-				const rotatedP1 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p1))));
-				const rotatedP2 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p2))));
+				const rotatedP1 = matrix2Vec(matrixMul(scaleMatrix, vec2Matrix(p1)));
+				const rotatedP2 = matrix2Vec(matrixMul(scaleMatrix, vec2Matrix(p2)));
 
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
