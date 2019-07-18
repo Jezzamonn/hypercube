@@ -1,4 +1,4 @@
-import { easeInOut, loop } from './util';
+import { easeInOut, loop, clamp } from './util';
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 
@@ -93,8 +93,9 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	renderAxis(context) {
-		const scale = 60;
+		const baseSize = 60;
 		for (let i = 0; i < this.currentIntDimension; i++) {
+			const scale = baseSize * clamp(this.currentDimension - i - 1, 0, 1);
 			const p = [];
 			for (let j = 0; j < this.currentIntDimension; j++) {
 				p.push(0);
