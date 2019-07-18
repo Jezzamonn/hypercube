@@ -37,13 +37,13 @@ export default class Controller {
 	updateProjections() {
 		this.dimensionProjections = [];
 		for (let i = 0; i < this.currentIntDimension; i++) {
-			let amt = 0;
-			if (i == this.currentIntDimension - 1) {
-				amt = i / this.currentIntDimension;
-			}
-			else {
-				amt = i / (this.currentDimension - 1);
-			}
+			let amt = i / (i + 1); 
+			// if (i == this.currentIntDimension - 1) {
+			// 	amt = i / this.currentIntDimension;
+			// }
+			// else {
+			// 	amt = i / (this.currentDimension - 1);
+			// }
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
