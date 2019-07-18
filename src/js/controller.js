@@ -4,19 +4,25 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.period = 6;
+		this.shapeTime = 2;
+		this.dimension = [2, 3, 4, 5];
+		this.period = this.dimension.length * this.shapeTime;
 
-		this.dimensions = 4;
+		this.setNumberOfDimensions(4);
+	}
+
+	setNumberOfDimensions(dim) {
+		this.currentDimension = dim;
 
 		this.hyperPoints = [[]];
 
-		for (let i = 0; i < this.dimensions; i++) {
+		for (let i = 0; i < this.currentDimension; i++) {
 			this.hyperPoints = appendPermutations([-1, 1], this.hyperPoints);
 		}
 
 		this.dimensionProjections = [];
-		for (let i = 0; i < this.dimensions; i++) {
-			const amt = i / this.dimensions;
+		for (let i = 0; i < this.currentDimension; i++) {
+			const amt = i / this.currentDimension;
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
@@ -25,16 +31,16 @@ export default class Controller {
 			this.dimensionProjections.push(projection);
 		}
 
-		this.baseRotation = identity(this.dimensions);
-		for (let i = 0; i < this.dimensions - 1; i++) {
-			const subRotation = rotationMatrix(
-				this.dimensions,
-				i,
-				i + 1,
-				2 * Math.PI * Math.random(),
-			);
-			this.baseRotation = matrixMul(subRotation, this.baseRotation);
-		}
+		this.baseRotation = identity(this.currentDimension);
+		// for (let i = 0; i < this.dimensions - 1; i++) {
+		// 	const subRotation = rotationMatrix(
+		// 		this.dimensions,
+		// 		i,
+		// 		i + 1,
+		// 		2 * Math.PI * Math.random(),
+		// 	);
+		// 	this.baseRotation = matrixMul(subRotation, this.baseRotation);
+		// }
 	}
 
 	/**
@@ -45,6 +51,12 @@ export default class Controller {
 	update(dt) {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
+
+		const dimensionIndex = Math.floor(this.dimension.length * this.animAmt);
+		const desiredDimension = this.dimension[dimensionIndex];
+		if (desiredDimension != this.currentDimension) {
+			this.setNumberOfDimensions(desiredDimension);
+		}
 	}
 
 	/**
@@ -63,9 +75,9 @@ export default class Controller {
 	 */
 	renderAxis(context) {
 		const scale = 60;
-		for (let i = 0; i < this.dimensions; i++) {
+		for (let i = 0; i < this.currentDimension; i++) {
 			const p = [];
-			for (let j = 0; j < this.dimensions; j++) {
+			for (let j = 0; j < this.currentDimension; j++) {
 				p.push(0);
 			}
 			p[i] = 1;
@@ -108,9 +120,9 @@ export default class Controller {
 	 */
 	renderHypercube(context) {
 		let rotMatrix = this.baseRotation;
-		for (let i = 0; i < this.dimensions - 1; i++) {
+		for (let i = 0; i < this.currentDimension - 1; i++) {
 			const subRotation = rotationMatrix(
-				this.dimensions,
+				this.currentDimension,
 				i,
 				i + 1,
 				2 * Math.PI * this.animAmt
