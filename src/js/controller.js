@@ -4,7 +4,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.shapeTime = 2;
+		this.shapeTime = 4;
 		this.dimensions = [1, 2, 3, 4, 5];
 		this.period = this.dimensions.length * this.shapeTime;
 
