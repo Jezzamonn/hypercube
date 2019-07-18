@@ -293,11 +293,10 @@ function matrix2Vec(matrix) {
 }
 
 function getDimensionLabel(dim) {
-	const labels = ['x', 'y', 'z', 'u', 'v', 'w'];
-	if (dim < labels.length) {
-		return labels[dim];
+	if (dim < 3) {
+		return String.fromCharCode('x'.charCodeAt(0) + dim)
 	}
-	return '?';
+	return String.fromCharCode('z'.charCodeAt(0) - dim)
 }
 
 function getColor(dim) {
