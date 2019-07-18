@@ -7,7 +7,7 @@ export default class Controller {
 	constructor() {
 		this.animAmt = 0;
 		this.shapeTime = 2;
-		this.dimensions = [1, 2, 3, 4, 5];
+		this.dimensions = [1, 2, 3, 4];
 		this.period = this.dimensions.length * this.shapeTime;
 
 		this.setNumberOfDimensions(4);
@@ -24,7 +24,7 @@ export default class Controller {
 
 		this.dimensionProjections = [];
 		for (let i = 0; i < this.currentDimension; i++) {
-			const amt = i / this.currentDimension;
+			const amt = i / this.dimensions.length;
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
