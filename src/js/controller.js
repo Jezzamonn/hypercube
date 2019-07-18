@@ -17,6 +17,7 @@ export default class Controller {
 
 		this.lastCalculatedDimension = 0;
 		this.generateDimensionData();
+		this.updateProjections();
 	}
 
 	get currentIntDimension() {
@@ -30,18 +31,6 @@ export default class Controller {
 			this.hyperPoints = appendPermutations([-1, 1], this.hyperPoints);
 		}
 
-		this.dimensionProjections = [];
-		for (let i = 0; i < this.currentIntDimension; i++) {
-			const amt = i / this.totalDimensions;
-			const angle = Math.PI * amt;
-			const projection = {
-				x: Math.cos(angle),
-				y: -Math.sin(angle),
-			}
-			this.dimensionProjections.push(projection);
-		}
-
-		this.baseRotation = identity(this.currentIntDimension);
 		// for (let i = 0; i < this.dimensions - 1; i++) {
 		// 	const subRotation = rotationMatrix(
 		// 		this.dimensions,
@@ -52,6 +41,21 @@ export default class Controller {
 		// 	this.baseRotation = matrixMul(subRotation, this.baseRotation);
 		// }
 		this.lastCalculatedDimension = this.currentIntDimension;
+	}
+
+	updateProjections() {
+		this.dimensionProjections = [];
+		for (let i = 0; i < this.currentIntDimension; i++) {
+			const amt = i == 0 ? 0 : i / (this.currentDimension - 1);
+			const angle = Math.PI * amt;
+			const projection = {
+				x: Math.cos(angle),
+				y: -Math.sin(angle),
+			}
+			this.dimensionProjections.push(projection);
+		}
+
+		this.baseRotation = identity(this.currentIntDimension);
 	}
 
 	updateDimensionData() {
@@ -71,6 +75,7 @@ export default class Controller {
 
 		this.currentDimension = this.minDimension + this.totalDimensions * loop(this.animAmt);
 		this.updateDimensionData();
+		this.updateProjections();
 	}
 
 	/**
