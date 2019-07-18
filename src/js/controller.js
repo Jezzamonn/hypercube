@@ -5,8 +5,8 @@ export default class Controller {
 	constructor() {
 		this.animAmt = 0;
 		this.shapeTime = 2;
-		this.dimension = [2, 3, 4, 5];
-		this.period = this.dimension.length * this.shapeTime;
+		this.dimensions = [1, 2, 3, 4, 5];
+		this.period = this.dimensions.length * this.shapeTime;
 
 		this.setNumberOfDimensions(4);
 	}
@@ -52,8 +52,8 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		const dimensionIndex = Math.floor(this.dimension.length * this.animAmt);
-		const desiredDimension = this.dimension[dimensionIndex];
+		const dimensionIndex = Math.floor(this.dimensions.length * this.animAmt);
+		const desiredDimension = this.dimensions[dimensionIndex];
 		if (desiredDimension != this.currentDimension) {
 			this.setNumberOfDimensions(desiredDimension);
 		}
@@ -119,13 +119,14 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	renderHypercube(context) {
+		const localAnimAmt = (this.dimensions.length * this.animAmt) % 1;
 		let rotMatrix = this.baseRotation;
 		for (let i = 0; i < this.currentDimension - 1; i++) {
 			const subRotation = rotationMatrix(
 				this.currentDimension,
 				i,
 				i + 1,
-				2 * Math.PI * this.animAmt
+				2 * Math.PI * localAnimAmt
 			);
 			rotMatrix = matrixMul(subRotation, rotMatrix);
 		}
