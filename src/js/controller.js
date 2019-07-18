@@ -1,10 +1,12 @@
+import { easeInOut } from './util';
+
 const PHI = (1 + Math.sqrt(5)) / 2;
 
 export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.shapeTime = 4;
+		this.shapeTime = 2;
 		this.dimensions = [1, 2, 3, 4, 5];
 		this.period = this.dimensions.length * this.shapeTime;
 
@@ -132,7 +134,7 @@ export default class Controller {
 		}
 		// Also scale the last dimension
 		const scaleMatrix = identity(this.currentDimension);
-		scaleMatrix[this.currentDimension-1][this.currentDimension-1] = this.animAmt;
+		scaleMatrix[this.currentDimension-1][this.currentDimension-1] = easeInOut(localAnimAmt, 2);
 
 		for (let i = 0; i < this.hyperPoints.length; i++) {
 			const p1 = this.hyperPoints[i];
@@ -144,8 +146,8 @@ export default class Controller {
 					continue;
 				}
 
-				const rotatedP1 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p1))));
-				const rotatedP2 = matrix2Vec(matrixMul(rotMatrix, matrixMul(scaleMatrix, vec2Matrix(p2))));
+				const rotatedP1 = matrix2Vec(matrixMul(scaleMatrix, vec2Matrix(p1)));
+				const rotatedP2 = matrix2Vec(matrixMul(scaleMatrix, vec2Matrix(p2)));
 
 				const point2d1 = get2dProjectedPoint(rotatedP1, this.dimensionProjections);
 				const point2d2 = get2dProjectedPoint(rotatedP2, this.dimensionProjections);
