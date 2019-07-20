@@ -76,13 +76,17 @@ export default class Controller {
 		if (this.animAmt < this.animPivotTime) {
 			adjustedTime = divideInterval(this.animAmt, 0, this.animPivotTime);
 			this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
-			const thing = easeInOut(
+			this.dimensionAppearAmt = easeInOut(
 				clamp(
-					this.currentDimension % 1,
+					divideInterval(this.currentDimension % 1, 0, 0.4),
 					0, 1),
 				2);
-			this.dimensionAppearAmt = thing;
-			this.dimensionsAdjustAmt = thing;
+			this.dimensionsAdjustAmt = easeInOut(
+				clamp(
+					divideInterval(this.currentDimension % 1, 0.6, 0.9),
+					0, 1),
+				2);
+
 		}
 		else {
 			adjustedTime = 1 - divideInterval(this.animAmt, this.animPivotTime, 1);
