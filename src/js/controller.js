@@ -6,6 +6,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
+		this.animPivotTime = 0.85;
 		this.shapeTime = 3;
 		this.minDimension = 1;
 		this.maxDimension = 7;
@@ -71,25 +72,26 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		const pivotTime = 0.75;
 		let adjustedTime = 0;
-		if (this.animAmt < pivotTime) {
-			adjustedTime = divideInterval(this.animAmt, 0, pivotTime);
+		if (this.animAmt < this.animPivotTime) {
+			adjustedTime = divideInterval(this.animAmt, 0, this.animPivotTime);
+			this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
+			const thing = easeInOut(
+				clamp(
+					this.currentDimension % 1,
+					0, 1),
+				2);
+			this.dimensionAppearAmt = thing;
+			this.dimensionsAdjustAmt = thing;
 		}
 		else {
-			adjustedTime = 1 - divideInterval(this.animAmt, pivotTime, 1);
+			adjustedTime = 1 - divideInterval(this.animAmt, this.animPivotTime, 1);
+			this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
+			this.dimensionAppearAmt = this.currentDimension % 1;
+			this.dimensionsAdjustAmt = this.currentDimension % 1;
 		}
-		this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
 		this.updateDimensionData();
 		this.updateProjections();
-	}
-
-	get dimensionAppearAmt() {
-		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0, 0.9), 0, 1), 2)
-	}
-
-	get dimensionsAdjustAmt() {
-		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0, 0.9), 0, 1), 2);
 	}
 
 	/**
