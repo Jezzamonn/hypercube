@@ -85,11 +85,11 @@ export default class Controller {
 	}
 
 	get dimensionAppearAmt() {
-		return (this.currentDimension % 1);
+		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0, 0.7), 0, 1), 2)
 	}
 
 	get dimensionsAdjustAmt() {
-		return (this.currentDimension % 1);
+		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0.5, 1), 0, 1), 2);
 	}
 
 	/**
@@ -109,7 +109,11 @@ export default class Controller {
 	renderAxis(context) {
 		const baseSize = 60;
 		for (let i = 0; i < this.currentIntDimension; i++) {
-			const scale = baseSize * clamp(this.currentDimension - i - 1, 0, 1);
+			let scale = 1;
+			if (i == this.currentIntDimension - 1) {
+				scale = this.dimensionAppearAmt;
+			}
+			const size = baseSize * scale;
 			const p = [];
 			for (let j = 0; j < this.currentIntDimension; j++) {
 				p.push(0);
@@ -124,25 +128,25 @@ export default class Controller {
 			context.strokeStyle = getColor(i);
 			context.lineWidth = 1;
 			context.moveTo(0, 0);
-			context.lineTo(scale * p2d.x, scale * p2d.y);
+			context.lineTo(size * p2d.x, size * p2d.y);
 
 			// the arrow head
 			context.moveTo(
-				0.9 * scale * p2d.x - 0.05 * scale * p2d.y,
-				0.9 * scale * p2d.y + 0.05 * scale * p2d.x
+				0.9 * size * p2d.x - 0.05 * size * p2d.y,
+				0.9 * size * p2d.y + 0.05 * size * p2d.x
 			);
-			context.lineTo(scale * p2d.x, scale * p2d.y);
+			context.lineTo(size * p2d.x, size * p2d.y);
 			context.lineTo(
-				0.9 * scale * p2d.x + 0.05 * scale * p2d.y,
-				0.9 * scale * p2d.y - 0.05 * scale * p2d.x
+				0.9 * size * p2d.x + 0.05 * size * p2d.y,
+				0.9 * size * p2d.y - 0.05 * size * p2d.x
 			);
 			context.stroke();
 
 			context.fillStyle = getColor(i);
 			context.fillText(
 				getDimensionLabel(i),
-				1.1 * scale * p2d.x,
-				1.1 * scale * p2d.y
+				1.1 * size * p2d.x,
+				1.1 * size * p2d.y
 			);
 
 			context.globalAlpha = startAlpha;
