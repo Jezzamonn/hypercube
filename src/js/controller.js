@@ -71,7 +71,7 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		this.currentDimension = this.minDimension + this.totalDimensions * loop(this.animAmt);
+		this.currentDimension = this.minDimension + this.totalDimensions * loop(this.animAmt * this.animAmt);
 		this.updateDimensionData();
 		this.updateProjections();
 	}
