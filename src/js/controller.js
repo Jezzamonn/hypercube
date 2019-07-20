@@ -79,7 +79,7 @@ export default class Controller {
 		else {
 			adjustedTime = 1 - divideInterval(this.animAmt, 0.7, 1);
 		}
-		this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
+		this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
 		this.updateDimensionData();
 		this.updateProjections();
 	}
