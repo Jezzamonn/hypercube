@@ -40,7 +40,14 @@ export default class Controller {
 		for (let i = 0; i < this.currentIntDimension; i++) {
 			let amt = 0
 			if (i == this.currentIntDimension - 1) {
-				amt = i / this.currentIntDimension;
+				// Halfway between the last axis and the end
+				const startAngle = slurp(
+					(i - 1) / (this.currentDimension - 1),
+					1, 0.5);
+				amt = slurp(
+					startAngle,
+					i / this.currentIntDimension,
+					this.dimensionsAdjustAmt);
 			}
 			else if (i > 0) {
 				amt = slurp(
