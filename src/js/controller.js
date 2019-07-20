@@ -6,9 +6,9 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
-		this.shapeTime = 4;
+		this.shapeTime = 3;
 		this.minDimension = 1;
-		this.maxDimension = 9;
+		this.maxDimension = 5;
 		this.totalDimensions = this.maxDimension - this.minDimension + 1;
 		this.period = this.totalDimensions * this.shapeTime;
 
@@ -36,7 +36,6 @@ export default class Controller {
 
 	updateProjections() {
 		this.dimensionProjections = [];
-		const leftoverAmt = this.currentDimension % 1;
 		for (let i = 0; i < this.currentIntDimension; i++) {
 			let amt = 0
 			if (i == this.currentIntDimension - 1) {
@@ -44,9 +43,9 @@ export default class Controller {
 			}
 			else if (i > 0) {
 				amt = slurp(
-					i / (this.currentDimension - 1),
+					i / (this.currentIntDimension - 1),
 					i / this.currentIntDimension,
-					leftoverAmt);
+					this.dimensionsAdjustAmt);
 			}
 			const angle = Math.PI * amt;
 			const projection = {
@@ -75,6 +74,14 @@ export default class Controller {
 		this.currentDimension = this.minDimension + this.totalDimensions * loop(this.animAmt);
 		this.updateDimensionData();
 		this.updateProjections();
+	}
+
+	get dimensionAppearAmt() {
+		return (this.currentDimension % 1);
+	}
+
+	get dimensionsAdjustAmt() {
+		return (this.currentDimension % 1);
 	}
 
 	/**
@@ -138,9 +145,8 @@ export default class Controller {
 	 * @param {!CanvasRenderingContext2D} context
 	 */
 	renderHypercube(context) {
-		const localAnimAmt = this.currentDimension % 1;
 		const scaleMatrix = identity(this.currentIntDimension);
-		scaleMatrix[this.currentIntDimension-1][this.currentIntDimension-1] = easeInOut(localAnimAmt, 2);
+		scaleMatrix[this.currentIntDimension-1][this.currentIntDimension-1] = this.dimensionAppearAmt;
 
 		for (let i = 0; i < this.hyperPoints.length; i++) {
 			const p1 = this.hyperPoints[i];
