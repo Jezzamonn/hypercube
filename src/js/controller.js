@@ -1,4 +1,4 @@
-import { easeInOut, loop, clamp, slurp } from './util';
+import { easeInOut, loop, clamp, slurp, divideInterval } from './util';
 
 const PHI = (1 + Math.sqrt(5)) / 2;
 
@@ -71,7 +71,15 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		this.currentDimension = this.minDimension + this.totalDimensions * loop(this.animAmt * this.animAmt);
+		const pivotTime = 0.7;
+		let adjustedTime = 0;
+		if (this.animAmt < pivotTime) {
+			adjustedTime = divideInterval(this.animAmt, 0, 0.7);
+		}
+		else {
+			adjustedTime = 1 - divideInterval(this.animAmt, 0.7, 1);
+		}
+		this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
 		this.updateDimensionData();
 		this.updateProjections();
 	}
