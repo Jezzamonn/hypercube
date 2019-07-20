@@ -8,7 +8,7 @@ export default class Controller {
 		this.animAmt = 0;
 		this.shapeTime = 3;
 		this.minDimension = 1;
-		this.maxDimension = 5;
+		this.maxDimension = 7;
 		this.totalDimensions = this.maxDimension - this.minDimension + 1;
 		this.period = this.totalDimensions * this.shapeTime;
 
@@ -79,17 +79,17 @@ export default class Controller {
 		else {
 			adjustedTime = 1 - divideInterval(this.animAmt, pivotTime, 1);
 		}
-		this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
+		this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
 		this.updateDimensionData();
 		this.updateProjections();
 	}
 
 	get dimensionAppearAmt() {
-		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0, 0.7), 0, 1), 2)
+		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0, 0.9), 0, 1), 2)
 	}
 
 	get dimensionsAdjustAmt() {
-		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0.2, 1), 0, 1), 2);
+		return easeInOut(clamp(divideInterval(this.currentDimension % 1, 0, 0.9), 0, 1), 2);
 	}
 
 	/**
