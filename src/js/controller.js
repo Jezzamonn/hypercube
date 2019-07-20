@@ -6,6 +6,7 @@ export default class Controller {
 
 	constructor() {
 		this.animAmt = 0;
+		this.adjustedTime = 0;
 		this.animPivotTime = 0.85;
 		this.shapeTime = 2;
 		this.minDimension = 1;
@@ -65,15 +66,15 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		let adjustedTime = 0;
 		if (this.animAmt < this.animPivotTime) {
-			adjustedTime = divideInterval(this.animAmt, 0, this.animPivotTime);
+			this.adjustedTime = divideInterval(this.animAmt, 0, this.animPivotTime);
 		}
 		else {
-			adjustedTime = 1 - divideInterval(this.animAmt, this.animPivotTime, 1);
+			this.adjustedTime = 1 - divideInterval(this.animAmt, this.animPivotTime, 1);
 		}
+		this.adjustedTime = easeInOut(this.adjustedTime, 2);
 
-		this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
+		this.currentDimension = this.minDimension + this.totalDimensions * this.adjustedTime;
 		this.dimensionAppearAmt = this.currentDimension % 1;
 		this.dimensionsAdjustAmt = this.currentDimension % 1;
 
@@ -168,7 +169,7 @@ export default class Controller {
 				const size = 30;
 
 				const startAlpha = context.globalAlpha;
-				context.globalAlpha = 0.75;
+				context.globalAlpha = slurp(1, 0.2, this.adjustedTime);
 				context.beginPath();
 				context.strokeStyle = 'black';
 				context.lineWidth = 1;
