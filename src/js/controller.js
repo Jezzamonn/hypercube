@@ -7,9 +7,9 @@ export default class Controller {
 	constructor() {
 		this.animAmt = 0;
 		this.animPivotTime = 0.85;
-		this.shapeTime = 3;
+		this.shapeTime = 2;
 		this.minDimension = 1;
-		this.maxDimension = 7;
+		this.maxDimension = 11;
 		this.totalDimensions = this.maxDimension - this.minDimension + 1;
 		this.period = this.totalDimensions * this.shapeTime;
 
@@ -38,23 +38,7 @@ export default class Controller {
 	updateProjections() {
 		this.dimensionProjections = [];
 		for (let i = 0; i < this.currentIntDimension; i++) {
-			let amt = 0
-			if (i == this.currentIntDimension - 1) {
-				// Halfway between the last axis and the end
-				const startAngle = slurp(
-					i == 0 ? -1 : (i - 1) / (this.currentIntDimension - 1),
-					1, 0.5);
-				amt = slurp(
-					startAngle,
-					i / this.currentIntDimension,
-					this.dimensionsAdjustAmt);
-			}
-			else if (i > 0) {
-				amt = slurp(
-					i / (this.currentIntDimension - 1),
-					i / this.currentIntDimension,
-					this.dimensionsAdjustAmt);
-			}
+			const amt = i == 0 ? 0 : i / (this.currentDimension - 1);
 			const angle = Math.PI * amt;
 			const projection = {
 				x: Math.cos(angle),
@@ -62,6 +46,8 @@ export default class Controller {
 			}
 			this.dimensionProjections.push(projection);
 		}
+
+		this.baseRotation = identity(this.currentIntDimension);
 	}
 
 	updateDimensionData() {
@@ -82,25 +68,15 @@ export default class Controller {
 		let adjustedTime = 0;
 		if (this.animAmt < this.animPivotTime) {
 			adjustedTime = divideInterval(this.animAmt, 0, this.animPivotTime);
-			this.currentDimension = this.minDimension + this.totalDimensions * adjustedTime;
-			this.dimensionAppearAmt = easeInOut(
-				clamp(
-					divideInterval(this.currentDimension % 1, 0, 0.4),
-					0, 1),
-				2);
-			this.dimensionsAdjustAmt = easeInOut(
-				clamp(
-					divideInterval(this.currentDimension % 1, 0.6, 0.9),
-					0, 1),
-				2);
-
 		}
 		else {
 			adjustedTime = 1 - divideInterval(this.animAmt, this.animPivotTime, 1);
-			this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
-			this.dimensionAppearAmt = this.currentDimension % 1;
-			this.dimensionsAdjustAmt = this.currentDimension % 1;
 		}
+
+		this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
+		this.dimensionAppearAmt = this.currentDimension % 1;
+		this.dimensionsAdjustAmt = this.currentDimension % 1;
+
 		this.updateDimensionData();
 		this.updateProjections();
 	}
