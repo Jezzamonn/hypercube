@@ -71,13 +71,13 @@ export default class Controller {
 		this.animAmt += dt / this.period;
 		this.animAmt %= 1;
 
-		const pivotTime = 0.7;
+		const pivotTime = 0.75;
 		let adjustedTime = 0;
 		if (this.animAmt < pivotTime) {
-			adjustedTime = divideInterval(this.animAmt, 0, 0.7);
+			adjustedTime = divideInterval(this.animAmt, 0, pivotTime);
 		}
 		else {
-			adjustedTime = 1 - divideInterval(this.animAmt, 0.7, 1);
+			adjustedTime = 1 - divideInterval(this.animAmt, pivotTime, 1);
 		}
 		this.currentDimension = this.minDimension + this.totalDimensions * easeInOut(adjustedTime, 2);
 		this.updateDimensionData();
