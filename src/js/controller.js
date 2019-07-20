@@ -42,7 +42,7 @@ export default class Controller {
 			if (i == this.currentIntDimension - 1) {
 				// Halfway between the last axis and the end
 				const startAngle = slurp(
-					(i - 1) / (this.currentDimension - 1),
+					i == 0 ? -1 : (i - 1) / (this.currentIntDimension - 1),
 					1, 0.5);
 				amt = slurp(
 					startAngle,
